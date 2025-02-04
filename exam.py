@@ -90,8 +90,8 @@ x1=[1,1,1,-1,1,-1,1,1,1]
 x2=[1,1,1,1,-1,1,1,,1,1]
 b = 0
 
-y0 = 1
-y1 = -1
+y0 = 1 #target output
+y1 = -1 #target output
 
 wtold = [0,0,0,0,0,0,0,0,0]
 print("First input with target = 1")
@@ -155,28 +155,32 @@ plt.show()
 ##Hopefield Network
 import numpy as np
 import matplotlib.pyplot as plt
-class HopefieldNetwork:
-    def __init__(size,size):
+class HopfieldNetwork:
+    def __init__(self, size):
         self.size = size
-        self.weights = np.zeros((size),(size))
+        self.weights = np.zeros((size, size))  # Initialize weights as zeros
 
-    def train(self,patterns):
+    def train(self, patterns):
+        """Train the network using Hebbian learning."""
         for pattern in patterns:
-            self.weights += np.outer(pattern,pattern)
-        np.fill_diagonal(self.weights,0)
+            self.weights += np.outer(pattern, pattern)  # Update weights
+        np.fill_diagonal(self.weights, 0)  # No self-connections
 
-    def recall(self,pattern):
-        state = pattern.copy
-        for _ in range (5):
+    def recall(self, pattern):
+        """Recall a pattern from noisy input."""
+        state = pattern.copy()
+        for _ in range(5):  # Update for 5 steps
             for i in range(self.size):
                 state[i] = 1 if np.dot(self.weights[i], state) > 0 else -1
         return state
 
-    def plot_pattern(self,pattern):
-        plt.imshow(pattern.reshape(3,3),cmap ='gray')
+    def plot_pattern(self, pattern):
+        """Plot the pattern as a 3x3 grid."""
+        plt.imshow(pattern.reshape(3, 3), cmap='gray')  # Display as a 3x3 grid
         plt.axis('off')
         plt.show()
 
+# Example usage
 if __name__ == "__main__":
     # Define simple patterns
     pattern1 = np.array([1, -1, 1, -1, 1, -1, 1, -1, 1])  # Checkerboard
